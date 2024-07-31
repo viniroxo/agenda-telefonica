@@ -3,7 +3,7 @@ import {Button} from "@mui/material";
 function Home() {
     return (
         <div>
-            <Button variant="outlined">Hello world</Button>
+            <Button variant="contained">Hello world</Button>
         </div>
     );
 }
