@@ -76,7 +76,7 @@ const contrastingColorNames = [
 ];
 
 const StyledFab = styled(Fab)`
-  position: absolute !important;
+  position: fixed !important;
   bottom: 16px;
   right: 16px;
 `;
@@ -211,7 +211,7 @@ function Home() {
                     }) // Ordena a lista em ordem alfabética
                     .filter((contact) => contact.nome.toLocaleLowerCase().includes(searchText.toLowerCase())) // Filtra a lista de acordo com o texto digitado no camp ode busca
                     .map(contact =>
-                        <Grid item xs={12} sm={12} md={4} xl={3} key={contact.id}>
+                        <Grid item xs={12} sm={12} md={6} xl={3} key={contact.id}>
                             <Contact
                                 data={contact}
                                 onFavorite={handleFavorite}

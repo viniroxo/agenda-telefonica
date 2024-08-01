@@ -61,10 +61,28 @@ function Contact({data, onFavorite, onEdit, onDelete}) {
                     <Avatar sx={{bgcolor: data.cor}} aria-label="recipe">
                         {data.nome.charAt(0)}
                     </Avatar>
-                    <CardContent>
-                        <Typography>{data.nome}</Typography>
-                        <Typography variant={"subtitle2"}>{data.email}</Typography>
-                        <Typography variant={"subtitle2"}>{data.telefone}</Typography>
+                    <CardContent sx={{maxWidth: "155px"}}>
+                        <Typography sx={{
+                            whiteSpace: "nowrap",
+                            textOverflow: "ellipsis",
+                            overflow: "hidden"
+                        }}>
+                            {data.nome}
+                        </Typography>
+                        <Typography variant={"subtitle2"} sx={{
+                            whiteSpace: "nowrap",
+                            textOverflow: "ellipsis",
+                            overflow: "hidden"
+                        }}>
+                            {data.email}
+                        </Typography>
+                        <Typography variant={"subtitle2"} sx={{
+                            whiteSpace: "nowrap",
+                            textOverflow: "ellipsis",
+                            overflow: "hidden"
+                        }}>
+                            {data.telefone}
+                        </Typography>
                     </CardContent>
                 </ContactInfo>
                 <div>
