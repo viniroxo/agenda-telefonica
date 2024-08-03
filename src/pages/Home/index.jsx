@@ -197,7 +197,7 @@ function Home() {
     return (
         <div>
             <Grid container rowSpacing={1} columnSpacing={{xs: 1, sm: 1, md: 1}} justifyContent="center">
-                <Grid item xs={12} sm={8} md={8} xl={8}>
+                <Grid item xs={12} sm={8} md={8} xl={8} sx={{margin: "8px"}}>
                     <InputSearch onSearch={handleSearch}/>
                 </Grid>
             </Grid>

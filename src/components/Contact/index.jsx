@@ -59,7 +59,7 @@ function Contact({data, onFavorite, onEdit, onDelete}) {
             <ContactCard>
                 <ContactInfo>
                     <Avatar sx={{bgcolor: data.cor}} aria-label="recipe">
-                        {data.nome.charAt(0)}
+                        {data.nome.charAt(0).toUpperCase()}
                     </Avatar>
                     <CardContent sx={{maxWidth: "155px"}}>
                         <Typography sx={{
@@ -107,10 +107,10 @@ function Contact({data, onFavorite, onEdit, onDelete}) {
                             handleClose();
                             onFavorite(data.id);
                         }}>
-                            <Icon color={"#f91880"}>
+                            <Icon color={data.favorito ? "" : "#f91880"}>
                                 <FavoriteIcon fontSize="small"/>
                             </Icon>
-                            <ListItemText>Favoritar</ListItemText>
+                            <ListItemText>{data.favorito ? "Desfavoritar" : "Favoritar"}</ListItemText>
                         </MenuItem>
                         <MenuItem onClick={() => {
                             handleClose();

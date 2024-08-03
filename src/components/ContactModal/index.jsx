@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {
+    Alert,
     Button,
     Dialog,
     DialogActions,
@@ -16,6 +17,8 @@ function ContactModal({open, onClose, onAdd, onEdit, selectedContact}) {
     const [nome, setNome] = useState("");
     const [telefone, setTelefone] = useState("");
     const [email, setEmail] = useState("");
+
+    const [error, setError] = useState(false);
 
     useEffect(() => {
         setNome(selectedContact.nome);
@@ -69,7 +72,6 @@ function ContactModal({open, onClose, onAdd, onEdit, selectedContact}) {
                     </Grid>
                     <Grid item xs={12} sm={12} md={6}>
                         <TextField
-                            autoFocus
                             required
                             margin="dense"
                             label="Telefone"
@@ -83,7 +85,6 @@ function ContactModal({open, onClose, onAdd, onEdit, selectedContact}) {
                     </Grid>
                     <Grid item xs={12} sm={12} md={12}>
                         <TextField
-                            autoFocus
                             required
                             margin="dense"
                             label="Email"
@@ -94,17 +95,27 @@ function ContactModal({open, onClose, onAdd, onEdit, selectedContact}) {
                             onChange={handleChangeEmail}
                         />
                     </Grid>
+                    <Grid item xs={12} sm={12} md={12} sx={error ? {} : {display: "none"}}>
+                        <Alert severity="error">Preencha todos os campos</Alert>
+                    </Grid>
                 </Grid>
+
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose}>Cancelar</Button>
+                <Button onClick={() => {
+                    setError(false);
+                    onClose();
+                }}>
+                    Cancelar
+                </Button>
                 <Button variant="contained" onClick={() => {
-                    let contact = {
-                        nome,
-                        telefone,
-                        email,
-                    };
                     if (nome || telefone || email) {
+                        let contact = {
+                            nome,
+                            telefone,
+                            email,
+                        };
+
                         if (isEmpty(selectedContact)) {
                             onAdd(contact);
                         } else {
@@ -114,8 +125,9 @@ function ContactModal({open, onClose, onAdd, onEdit, selectedContact}) {
                         setNome("");
                         setTelefone("");
                         setEmail("");
+                        setError(false);
                     } else {
-                        alert("preencha todos os campos")
+                        setError(true);
                     }
                 }}>{isEmpty(selectedContact) ? "Adicionar" : "Alterar"}</Button>
             </DialogActions>
