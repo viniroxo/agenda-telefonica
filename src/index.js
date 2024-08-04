@@ -40,7 +40,7 @@ root.render(
                             <PhoneIcon/>
                         </IconButton>
                         <Typography variant="h6" component="div" sx={{flexGrow: 1}}>
-                            Agenda Telefônica
+                            Lista de contatos
                         </Typography>
                     </Toolbar>
                 </AppBar>
