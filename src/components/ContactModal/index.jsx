@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from "react";
 import {
-    Alert,
     Button,
     Dialog,
     DialogActions,
@@ -18,7 +17,9 @@ function ContactModal({open, onClose, onAdd, onEdit, selectedContact}) {
     const [telefone, setTelefone] = useState("");
     const [email, setEmail] = useState("");
 
-    const [error, setError] = useState(false);
+    const [errorNome, setErrorNome] = useState("");
+    const [errorTelefone, setErrorTelefone] = useState("");
+    const [errorEmail, setErrorEmail] = useState("");
 
     useEffect(() => {
         setNome(selectedContact.nome);
@@ -26,8 +27,35 @@ function ContactModal({open, onClose, onAdd, onEdit, selectedContact}) {
         setEmail(selectedContact.email);
     }, [selectedContact]);
 
+    const clearForm = () => {
+        setNome("");
+        setTelefone("");
+        setEmail("");
+
+        setErrorNome("");
+        setErrorTelefone("");
+        setErrorEmail("");
+    };
+
     const isEmpty = (obj) => {
         return Object.keys(obj).length === 0;
+    };
+
+    const isInvalidForm = () => {
+        let error = false;
+        if (!nome) {
+            setErrorNome("Preencha o campo Nome");
+            error = true;
+        }
+        if (!telefone) {
+            setErrorTelefone("Preencha o campo Telefone");
+            error = true;
+        }
+        if (!email) {
+            setErrorEmail("Preencha o campo Email");
+            error = true;
+        }
+        return error;
     };
 
     const handleChangeName = (e) => {
@@ -48,68 +76,9 @@ function ContactModal({open, onClose, onAdd, onEdit, selectedContact}) {
             onClose={onClose}
             PaperProps={{
                 component: 'form',
-            }}
-        >
-            <DialogTitle>{isEmpty(selectedContact) ? "Adicionar" : "Alterar"} Contato</DialogTitle>
-            <DialogContent>
-                <DialogContentText>
-                    Por favor, preencha os campos abaixo para {isEmpty(selectedContact) ? "adicionar" : "alterar"} este
-                    contato
-                </DialogContentText>
-                <Grid container rowSpacing={1} columnSpacing={{xs: 1, sm: 1, md: 1}}>
-                    <Grid item xs={12} sm={12} md={6}>
-                        <TextField
-                            autoFocus
-                            required
-                            margin="dense"
-                            label="Nome"
-                            type="text"
-                            fullWidth
-                            variant="standard"
-                            value={nome}
-                            onChange={handleChangeName}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={6}>
-                        <TextField
-                            required
-                            margin="dense"
-                            label="Telefone"
-                            type="tel"
-                            fullWidth
-                            variant="standard"
-                            inputProps={{maxLength: 11}}
-                            value={telefone}
-                            onChange={handleChangeTelefone}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={12}>
-                        <TextField
-                            required
-                            margin="dense"
-                            label="Email"
-                            type="email"
-                            fullWidth
-                            variant="standard"
-                            value={email}
-                            onChange={handleChangeEmail}
-                        />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={12} sx={error ? {} : {display: "none"}}>
-                        <Alert severity="error">Preencha todos os campos</Alert>
-                    </Grid>
-                </Grid>
-
-            </DialogContent>
-            <DialogActions>
-                <Button onClick={() => {
-                    setError(false);
-                    onClose();
-                }}>
-                    Cancelar
-                </Button>
-                <Button variant="contained" onClick={() => {
-                    if (nome || telefone || email) {
+                onSubmit: (event) => {
+                    event.preventDefault();
+                    if (!isInvalidForm()) {
                         let contact = {
                             nome,
                             telefone,
@@ -121,15 +90,74 @@ function ContactModal({open, onClose, onAdd, onEdit, selectedContact}) {
                         } else {
                             onEdit(contact, selectedContact.id)
                         }
-
-                        setNome("");
-                        setTelefone("");
-                        setEmail("");
-                        setError(false);
-                    } else {
-                        setError(true);
+                        clearForm();
+                        onClose();
                     }
-                }}>{isEmpty(selectedContact) ? "Adicionar" : "Alterar"}</Button>
+                },
+            }}
+        >
+            <DialogTitle>{isEmpty(selectedContact) ? "Adicionar" : "Alterar"} Contato</DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    Por favor, preencha os campos abaixo para {isEmpty(selectedContact) ? "adicionar" : "alterar"} este
+                    contato
+                </DialogContentText>
+                <Grid container rowSpacing={1} columnSpacing={{xs: 1, sm: 1, md: 1}}>
+                    <Grid item xs={12} sm={12} md={6}>
+                        <TextField
+                            id="nome"
+                            label="Nome"
+                            type="text"
+                            variant="standard"
+                            autoFocus
+                            margin="dense"
+                            fullWidth
+                            value={nome}
+                            error={!!errorNome}
+                            helperText={errorNome}
+                            onChange={handleChangeName}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={6}>
+                        <TextField
+                            margin="dense"
+                            id="telefone"
+                            label="Telefone"
+                            type="tel"
+                            fullWidth
+                            variant="standard"
+                            inputProps={{maxLength: 11}}
+                            value={telefone}
+                            error={!!errorTelefone}
+                            helperText={errorTelefone}
+                            onChange={handleChangeTelefone}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={12} md={12}>
+                        <TextField
+                            margin="dense"
+                            id="email"
+                            label="Email"
+                            type="email"
+                            fullWidth
+                            variant="standard"
+                            value={email}
+                            error={!!errorEmail}
+                            helperText={errorEmail}
+                            onChange={handleChangeEmail}
+                        />
+                    </Grid>
+                </Grid>
+
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={() => {
+                    clearForm();
+                    onClose();
+                }}>
+                    Cancelar
+                </Button>
+                <Button variant="contained" type="submit">{isEmpty(selectedContact) ? "Adicionar" : "Alterar"}</Button>
             </DialogActions>
         </Dialog>
     );
