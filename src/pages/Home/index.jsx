@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import Contact from "../../components/Contact";
-import {Grid} from "@mui/material";
+import {Grid, Typography} from "@mui/material";
 import {Fab} from '@mui/material';
 
 import AddIcon from '@mui/icons-material/Add';
@@ -194,6 +194,17 @@ function Home() {
         setOpenModal(false);
     };
 
+    const filterContacts = (text) => {
+        return contactList
+            .sort((a, b) => {
+                if (a.favorito === b.favorito) {
+                    return a.nome.localeCompare(b.nome);
+                }
+                return a.favorito ? -1 : 1;
+            }) // Ordena a lista em ordem alfabética
+            .filter((contact) => contact.nome.toLocaleLowerCase().includes(text.toLowerCase())) // Filtra a lista de acordo com o texto digitado no camp ode busca
+    };
+
     return (
         <div>
             <Grid container rowSpacing={1} columnSpacing={{xs: 1, sm: 1, md: 1}} justifyContent="center">
@@ -202,23 +213,24 @@ function Home() {
                 </Grid>
             </Grid>
             <Grid container rowSpacing={1} columnSpacing={{xs: 1, sm: 1, md: 1}}>
-                {contactList
-                    .sort((a, b) => {
-                        if (a.favorito === b.favorito) {
-                            return a.nome.localeCompare(b.nome);
-                        }
-                        return a.favorito ? -1 : 1;
-                    }) // Ordena a lista em ordem alfabética
-                    .filter((contact) => contact.nome.toLocaleLowerCase().includes(searchText.toLowerCase())) // Filtra a lista de acordo com o texto digitado no camp ode busca
-                    .map(contact =>
-                        <Grid item xs={12} sm={12} md={6} xl={3} key={contact.id}>
-                            <Contact
-                                data={contact}
-                                onFavorite={handleFavorite}
-                                onEdit={handleEdit}
-                                onDelete={handleDelete}/>
-                        </Grid>
-                    )}
+                {filterContacts(searchText).length === 0 ? (
+                    <Grid item xs={12} sm={12} md={12} xl={12} sx={{margin: "8px"}}>
+                        <Typography sx={{color: "#7c7c7c"}} align="center" variant={"subtitle2"}>
+                            Nenhum contato encontrado
+                        </Typography>
+                    </Grid>
+                ) : (
+                    filterContacts(searchText)
+                        .map(contact =>
+                            <Grid item xs={12} sm={12} md={6} xl={3} key={contact.id}>
+                                <Contact
+                                    data={contact}
+                                    onFavorite={handleFavorite}
+                                    onEdit={handleEdit}
+                                    onDelete={handleDelete}/>
+                            </Grid>
+                        )
+                )}
             </Grid>
             <ContactModal onClose={handleClose}
                           open={openModal}
